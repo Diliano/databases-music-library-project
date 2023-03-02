@@ -175,7 +175,7 @@ _After each test you write, follow the test-driving process of red, green, refac
 
 ```mermaid
 
-title sequenceDiagram
+sequenceDiagram
 
 bottomparticipants 
 
