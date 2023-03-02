@@ -173,6 +173,8 @@ end
 
 _After each test you write, follow the test-driving process of red, green, refactor to implement the behaviour._
 
+```mermaid
+
 title sequenceDiagram
 
 bottomparticipants 
@@ -208,4 +210,6 @@ end
 ar->>app:Returns array of Album objects
 
 app->>t:Prints list of albums to terminal
+
+```
 
