@@ -1,4 +1,4 @@
-# albums Model and Repository Classes Design Recipe
+# Albums Model and Repository Classes Design Recipe
 
 _Copy this recipe template to design and implement Model and Repository classes for a database table._
 
@@ -172,3 +172,40 @@ end
 ## 8. Test-drive and implement the Repository class behaviour
 
 _After each test you write, follow the test-driving process of red, green, refactor to implement the behaviour._
+
+title sequenceDiagram
+
+bottomparticipants 
+
+participant "terminal" as t
+participant "Main program (in app.rb)" as app
+participant "AlbumRepository class (in 	lib/album_repository.rb)" as ar
+participant "DatabaseConnection class in (in lib/database_connection.rb)" as db_conn
+participant "Postgres database" as db
+
+note left of t: Flow of time\n<align:center>⬇</align>\n<align:center>⬇</align>\n<align:center>⬇</align>
+
+t->>app:Runs `ruby app.rb`
+
+app->>db_conn:Opens connection to database by calling `connect` method on DatabaseConnection
+
+db_conn->>db_conn: Opens database connection using PG and stores the connection
+
+app->>ar:Calls `all` method on AlbumRepository
+
+ar->>db_conn:Sends SQL query by calling `exec_params` method on DatabaseConnection
+
+db_conn->>db: Sends query to database via the open database connection
+
+db->>db_conn:Returns an array of hashes, one for each row of the albums table
+
+db_conn->>ar:Returns an array of hashes, one for each row of the albums table
+
+loop 
+	ar->>ar:Loops through array and creates an 		Album object for every row
+end
+
+ar->>app:Returns array of Album objects
+
+app->>t:Prints list of albums to terminal
+
