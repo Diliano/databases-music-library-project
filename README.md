@@ -173,43 +173,43 @@ end
 
 _After each test you write, follow the test-driving process of red, green, refactor to implement the behaviour._
 
+## Sequence Diagram 
+
 ```mermaid
 
 sequenceDiagram
 
-bottomparticipants 
+    participant t as terminal
+    participant app as Main program (in app.rb)
+    participant ar as AlbumRepository class <br /> (in lib/album_repository.rb)
+    participant db_conn as DatabaseConnection class <br /> in (in lib/database_connection.rb)
+    participant db as Postgres database
 
-participant "terminal" as t
-participant "Main program (in app.rb)" as app
-participant "AlbumRepository class (in 	lib/album_repository.rb)" as ar
-participant "DatabaseConnection class in (in lib/database_connection.rb)" as db_conn
-participant "Postgres database" as db
+    Note left of t: Flow of time <br />⬇ <br /> ⬇ <br /> ⬇ 
 
-note left of t: Flow of time\n<align:center>⬇</align>\n<align:center>⬇</align>\n<align:center>⬇</align>
+    t->>app: Runs `ruby app.rb`
 
-t->>app:Runs `ruby app.rb`
+    app->>db_conn: Opens connection to database by calling `connect` method on DatabaseConnection
 
-app->>db_conn:Opens connection to database by calling `connect` method on DatabaseConnection
+    db_conn->>db_conn: Opens database connection using PG and stores the connection
 
-db_conn->>db_conn: Opens database connection using PG and stores the connection
+    app->>ar: Calls `all` method on AlbumRepository
 
-app->>ar:Calls `all` method on AlbumRepository
+    ar->>db_conn: Sends SQL query by calling `exec_params` method on DatabaseConnection
 
-ar->>db_conn:Sends SQL query by calling `exec_params` method on DatabaseConnection
+    db_conn->>db: Sends query to database via the open database connection
 
-db_conn->>db: Sends query to database via the open database connection
+    db->>db_conn: Returns an array of hashes, one for each row of the albums table
 
-db->>db_conn:Returns an array of hashes, one for each row of the albums table
+    db_conn->>ar: Returns an array of hashes, one for each row of the albums table
 
-db_conn->>ar:Returns an array of hashes, one for each row of the albums table
+    loop 
+        ar->>ar: Loops through array and creates a Album object for every row
+    end
 
-loop 
-	ar->>ar:Loops through array and creates an 		Album object for every row
-end
-
-ar->>app:Returns array of Album objects
-
-app->>t:Prints list of albums to terminal
+    ar->>app: Returns array of Album objects
+    
+    app->>t: Prints list of albums to terminal
 
 ```
 
